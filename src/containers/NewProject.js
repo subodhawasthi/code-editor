@@ -4,16 +4,52 @@ import { FcSettings } from "react-icons/fc";
 import SplitPane from "react-split-pane";
 import CodeMirror from "@uiw/react-codemirror";
 import { javascript } from "@codemirror/lang-javascript";
+import { Logo } from "../assets";
+import { Link } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
+import { MdCheck, MdEdit } from "react-icons/md";
+import { useSelector } from "react-redux";
+import { Alert, UserProfileDetails } from "../components";
+import { db } from "../config/firebase.config";
+import { doc, setDoc } from "firebase/firestore";
 
 const NewProject = () => {
   const [html, setHtml] = useState("");
   const [css, setCss] = useState("");
   const [js, setJs] = useState("");
   const [output, setOutput] = useState("");
+  const [isTitle, setIsTitle] = useState("");
+  const [title, setTitle] = useState("Untitled");
+  const [alert, setAlert] = useState(false);
+
+  const user = useSelector((state) => state.user?.user);
 
   useEffect(() => {
     updateOutput();
   }, [html, css, js]);
+
+  const saveProgram = async () => {
+    const id = `${Date.now()}`;
+    const _doc = {
+      id: id,
+      title: title,
+      html: html,
+      css: css,
+      js: js,
+      output: output,
+      user: user,
+    };
+
+    await setDoc(doc(db, "Projects", id), _doc)
+      .then((res) => {
+        setAlert(true);
+      })
+      .catch((err) => console.log(err));
+
+    setInterval(() => {
+      setAlert(false);
+    }, 2000);
+  };
 
   const updateOutput = () => {
     const combinedOutput = `
@@ -34,9 +70,101 @@ const NewProject = () => {
     <>
       <div className=" w-screen h-screen flex flex-col items-start justify-start overflow-hidden">
         {/* alert section */}
-
+        <AnimatePresence>
+          {alert && <Alert status={"Success"} alertMsg={"Project Saved"} />}
+        </AnimatePresence>
         {/* header section */}
-
+        <header className=" w-full flex items-center justify-between px-6 py-4">
+          <div className=" flex items-center justify-center gap-6">
+            <Link to={"/home/projects"}>
+              <img
+                src={Logo}
+                className="w-32 h-auto object-contain"
+                alt="logo"
+              />
+            </Link>
+            <div className=" flex flex-col items-start justify-start">
+              {/* title */}
+              <div className="flex items-center justify-center gap-3">
+                <AnimatePresence>
+                  {isTitle ? (
+                    <>
+                      <motion.input
+                        key={"TitleInput"}
+                        type="text"
+                        placeholder="Your Title"
+                        className=" px-3 py-2 rounded-md bg-transparent text-primaryText text-base outline-none border-none"
+                        value={title}
+                        onChange={(e) => setTitle(e.target.value)}
+                      />
+                    </>
+                  ) : (
+                    <>
+                      <motion.p
+                        key={"titleLabel"}
+                        className=" px-3 py-2 text-white text-lg"
+                      >
+                        {title}
+                      </motion.p>
+                    </>
+                  )}
+                </AnimatePresence>
+                <AnimatePresence>
+                  {isTitle ? (
+                    <>
+                      <motion.div
+                        key={"MdCheck"}
+                        className=" cursor-pointer"
+                        whileTap={{ scale: 0.9 }}
+                        onClick={() => setIsTitle(false)}
+                      >
+                        <MdCheck className=" text-2xl text-emerald-500" />
+                      </motion.div>
+                    </>
+                  ) : (
+                    <>
+                      <motion.div
+                        key={"MdEdit"}
+                        className=" cursor-pointer"
+                        whileTap={{ scale: 0.9 }}
+                        onClick={() => setIsTitle(true)}
+                      >
+                        <MdEdit className=" text-2xl text-primaryText" />
+                      </motion.div>
+                    </>
+                  )}
+                </AnimatePresence>
+              </div>
+              {/* follow */}
+              <div className="flex items-center justify-center px-3 -mt-2 gap-2">
+                {/* <p className=" text-primaryText text-sm">
+                  {user?.displayName
+                    ? user?.displayName
+                    : `${user?.email.split["@"][0]}`}
+                </p> */}
+                <motion.p
+                  whileTap={{ scale: 0.9 }}
+                  className=" text-[10px] bg-emerald-500 rounded-sm px-1 py-[1px] text-primary font-semibold cursor-pointer"
+                >
+                  + Follow
+                </motion.p>
+              </div>
+            </div>
+          </div>
+          {/* user section */}
+          {user && (
+            <div className=" flex items-center justify-center gap-4">
+              <motion.button
+                whileTap={{ scale: 0.9 }}
+                onClick={saveProgram}
+                className=" px-3 py-2 bg-primaryText cursor-pointer text-base text-primary font-semibold rounded-md"
+              >
+                Save
+              </motion.button>
+              <UserProfileDetails />
+            </div>
+          )}
+        </header>
         {/* coding section */}
 
         <div>
