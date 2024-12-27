@@ -2,6 +2,8 @@ import React from "react";
 import { motion } from "framer-motion";
 import { slideUpOut } from "../animations";
 
+// Alert section
+
 const Alert = ({ status, alertMsg }) => {
   return (
     <motion.div {...slideUpOut} className="fixed top-24 right-12 z-10">

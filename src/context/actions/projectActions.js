@@ -10,3 +10,4 @@ export const SET_PROJECTS_NULL = () => {
     type: "SET_PROJECTS_NULL",
   };
 };
+// fetching projects

@@ -14,5 +14,5 @@ const projectReducer = (state = null, action) => {
       return state;
   }
 };
-
+// fetching project
 export default projectReducer;
