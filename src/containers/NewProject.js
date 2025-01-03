@@ -137,11 +137,11 @@ const NewProject = () => {
               </div>
               {/* follow */}
               <div className="flex items-center justify-center px-3 -mt-2 gap-2">
-                {/* <p className=" text-primaryText text-sm">
+                <p className=" text-primaryText text-sm">
                   {user?.displayName
                     ? user?.displayName
-                    : `${user?.email.split["@"][0]}`}
-                </p> */}
+                    : `${user?.email.split("@")[0]}`}
+                </p>
                 <motion.p
                   whileTap={{ scale: 0.9 }}
                   className=" text-[10px] bg-emerald-500 rounded-sm px-1 py-[1px] text-primary font-semibold cursor-pointer"
