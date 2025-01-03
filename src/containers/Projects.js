@@ -47,6 +47,11 @@ const Projects = () => {
 };
 
 const ProjectCard = ({ project, index }) => {
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    navigate("/viewProject", { state: { project } });
+  };
   return (
     <motion.div
       key={index}
@@ -54,6 +59,7 @@ const ProjectCard = ({ project, index }) => {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5, delay: index * 0.3 }}
+      onClick={handleClick}
       className=" w-full cursor-pointer md:w-[450px] h-[375px] bg-secondary rounded-md p-4 flex flex-col items-center justify-center gap-4"
     >
       <div

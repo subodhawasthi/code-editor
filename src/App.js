@@ -15,6 +15,7 @@ import { useDispatch } from "react-redux";
 import { SET_USER } from "./context/actions/userActions";
 import NewProject from "./containers/NewProject";
 import { SET_PROJECTS } from "./context/actions/projectActions";
+import ViewProject from "./containers/ViewProject";
 
 const App = () => {
   const navigate = useNavigate();
@@ -68,6 +69,7 @@ const App = () => {
           <Routes>
             <Route path="/home/*" element={<Home />} />
             <Route path="/newProject" element={<NewProject />} />
+            <Route path="/viewProject" element={<ViewProject />} />
 
             {/* if the route not matching */}
             <Route path="*" element={<Navigate to={"/home"} />} />
